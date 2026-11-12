@@ -43,7 +43,7 @@ is displayed in the chat window.
 ```js
 // ✅ Call the class Cloudflare Worker, no key needed
 const response = await fetch(
-  "https://loreal-chatbot.your-subdomain.workers.dev/",
+  "https://loreal-project-chatbot.dannjudson.workers.dev/",
   {
     method: "POST",
     headers: { "Content-Type": "application/json" },
