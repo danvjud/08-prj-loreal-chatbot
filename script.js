@@ -6,72 +6,74 @@ const chatWindow = document.getElementById("chatWindow");
 // Store conversation history for the API
 let conversationHistory = [];
 
-// L'Oréal system prompt
-const SYSTEM_PROMPT = {
-  role: "system",
-  content: `You are a Smart Product Advisor for L'Oréal, a global beauty leader. You specialize in:
-- L'Oréal Paris skincare, makeup, and haircare products
-- Personalized beauty routines and product recommendations
-- Professional styling advice
-- Luxury beauty guidance
+// Cloudflare Worker URL (replace with your actual deployed URL)
+const WORKER_URL = "https://loreal-project-chatbot.dannjudson.workers.dev/";
 
-Your expertise includes: Lancôme, Giorgio Armani Beauty, Yves Saint Laurent Beauty, Kérastase, Garnier, Maybelline, and other L'Oréal brands.
-
-IMPORTANT: Only answer questions related to L'Oréal products, beauty routines, skincare, makeup, and haircare.
-
-For off-topic questions (unrelated to beauty or L'Oréal), politely decline and redirect: 
-"I'm here to help with L'Oréal products and beauty routines! Is there anything about skincare, makeup, or haircare I can help you with?"
-
-Be conversational, helpful, and knowledgeable about beauty.`
-};
+// Set initial message
+chatWindow.innerHTML = '<div class="message bot-message">👋 Hello! How can I help you today?</div>';
 
 /* Handle form submit */
 chatForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  // Get user message from input field
   const userMessage = userInput.value.trim();
+
+  // Prevent empty messages
   if (!userMessage) return;
 
+  // Display user message in chat window
   displayUserMessage(userMessage);
+
+  // Clear input field and focus for next message
   userInput.value = "";
 
-  // Build messages array with system prompt at the start
-  const messagesWithSystem = [
-    SYSTEM_PROMPT,
-    ...conversationHistory,
-    { role: "user", content: userMessage }
-  ];
-
+  // Add user message to conversation history
   conversationHistory.push({
     role: "user",
     content: userMessage,
   });
 
   try {
+    // Show loading indicator
     displayBotMessage("Thinking...");
 
+    // Send request to Cloudflare Worker
     const response = await fetch(WORKER_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        messages: messagesWithSystem,
+        messages: conversationHistory,
       }),
     });
 
-    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    // Check if response is successful
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
 
+    // Parse response
     const data = await response.json();
+
+    // Extract assistant message from response
     const assistantMessage = data.choices[0].message.content;
 
+    // Add assistant message to conversation history
     conversationHistory.push({
       role: "assistant",
       content: assistantMessage,
     });
 
+    // Display assistant message in chat window
     displayBotMessage(assistantMessage);
   } catch (error) {
+    // Handle errors gracefully
     console.error("Error:", error);
-    displayBotMessage("Sorry, something went wrong. Please try again.");
+    displayBotMessage(
+      "Sorry, something went wrong. Please check your connection and try again."
+    );
   }
 });
 
