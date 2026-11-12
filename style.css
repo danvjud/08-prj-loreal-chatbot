@@ -52,7 +52,6 @@ body {
   background-clip: text;
   margin-bottom: 8px;
   text-transform: uppercase;
-  tracking: 0.05em;
 }
 
 .site-title::after {
