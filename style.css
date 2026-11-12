@@ -37,9 +37,58 @@ body {
 /* —— header / branding —— */
 .site-header {
   text-align: center;
-  padding: 60px 0 40px;
-  border-bottom: 2px solid var(--loreal-gold);
+  padding: 40px 0;
+  background: linear-gradient(135deg, var(--loreal-white) 0%, #faf9f7 100%);
+  border-bottom: 3px solid var(--loreal-gold);
+  margin-bottom: 30px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative accent line */
+.site-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--loreal-red), transparent);
+}
+
+/* Logo container with styling */
+.header-logo-container {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loreal-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
+  transition: transform 0.3s ease, filter 0.3s ease;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.loreal-logo:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 4px 12px rgba(255, 0, 59, 0.15));
+}
+
+/* Logo animation on page load */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .site-title {
@@ -50,8 +99,9 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 8px;
+  margin: 0 0 12px 0;
   text-transform: uppercase;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
 }
 
 .site-title::after {
@@ -62,6 +112,29 @@ body {
   background: linear-gradient(90deg, var(--loreal-gold), var(--loreal-accent));
   margin: 16px auto 0;
   border-radius: 2px;
+}
+
+/* L'Oréal tagline styling */
+.site-tagline {
+  font-size: 14px;
+  font-weight: 500;
+  color: #8a7f78;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+/* Animation for tagline */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* —— chat window —— */
@@ -298,8 +371,21 @@ body {
 
 /* —— responsive —— */
 @media (max-width: 768px) {
+  .site-header {
+    padding: 30px 0;
+    margin-bottom: 20px;
+  }
+
+  .loreal-logo {
+    height: 40px;
+  }
+
   .site-title {
     font-size: 28px;
+  }
+
+  .site-tagline {
+    font-size: 12px;
   }
 
   .chat-window {
